@@ -33,21 +33,21 @@ extern "C" {
 
 
 
-	int DLL_EXPORT __stdcall SetupBitmap(unsigned char* pixelData, int width, int height, int stride, int pixelSize);
+	DLL_EXPORT int __stdcall SetupBitmap(unsigned char* pixelData, int width, int height, int stride, int pixelSize);
 
-	void DLL_EXPORT __stdcall SetControls(int val, int ctl);
+	DLL_EXPORT void __stdcall SetControls(int val, int ctl);
 
-	void DLL_EXPORT __stdcall UpdateEnvir(int x, int y);
+	DLL_EXPORT void __stdcall UpdateEnvir(int x, int y);
 
-	int DLL_EXPORT __stdcall ValidateSrc(char* src);
+	DLL_EXPORT int __stdcall ValidateSrc(char* src);
 
-	void DLL_EXPORT __stdcall SetupTree(char* src, int c);
+	DLL_EXPORT void __stdcall SetupTree(char* src, int c);
 
-	int DLL_EXPORT __stdcall CalcColor(int c);
+	DLL_EXPORT int __stdcall CalcColor(int c);
 
-	void DLL_EXPORT __stdcall FreeData();
+	DLL_EXPORT void __stdcall FreeData();
 
-	bool DLL_EXPORT __stdcall datafreed();
+	DLL_EXPORT bool __stdcall datafreed();
 
 #ifdef __cplusplus
 }
