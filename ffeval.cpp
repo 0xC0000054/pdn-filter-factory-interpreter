@@ -56,7 +56,7 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 	{
 		int rgba[4];
 		// the source data is BGR(A) the destination is RGB(A)
-		unsigned char *p = (unsigned char*)Pixeldata + (yy * Stride) + (xx * PixelSize); // get the pixel at xx,yy
+		unsigned char *p = Pixeldata + (yy * Stride) + (xx * PixelSize); // get the pixel at xx,yy
 		rgba[0] = (int)p[2]; // Red
 		rgba[1] = (int)p[1]; // Green
 		rgba[2] = (int)p[0]; // Blue
