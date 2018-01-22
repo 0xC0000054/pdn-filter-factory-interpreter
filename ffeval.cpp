@@ -24,6 +24,13 @@
 #include <new>
 #include "ffeval.h"
 
+_envir *env;
+s_uf_tree *tree[4];
+unsigned char *Pixeldata = NULL;
+int Stride = 0; // the stride of the Pixeldata
+int PixelSize = 0; // the bits per pixel of the Pixeldata
+bool datafree;
+
 // The function to get the pixel data from the bitmap
 static int GetPixel(_envir* e, int xx, int yy, int zz)
 {

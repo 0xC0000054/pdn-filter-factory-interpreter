@@ -53,11 +53,4 @@ extern "C" {
 }
 #endif
 
-_envir *env;
-s_uf_tree *tree[4];
-unsigned char *Pixeldata = NULL;
-int Stride = 0; // the stride of the Pixeldata
-int PixelSize = 0; // the bits per pixel of the Pixeldata
-bool datafree;
-
 #endif // !FFEVAL_H
