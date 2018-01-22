@@ -54,22 +54,29 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 
 	if (zz < e->Z && Pixeldata != nullptr)
 	{
-		int rgba[4];
+		int val;
 		// the source data is BGR(A) the destination is RGB(A)
 		unsigned char *p = Pixeldata + (yy * Stride) + (xx * PixelSize); // get the pixel at xx,yy
-		rgba[0] = (int)p[2]; // Red
-		rgba[1] = (int)p[1]; // Green
-		rgba[2] = (int)p[0]; // Blue
 
-		if (e->Z == 4)
+		switch (zz)
 		{
-			rgba[3] = (int)p[3]; // Alpha
+		case 0:
+			val = p[2]; // Red
+			break;
+		case 1:
+			val = p[1]; // Green
+			break;
+		case 2:
+			val = p[0]; // Blue
+			break;
+		case 3:
+			val = p[3]; // Alpha
+			break;
+		default:
+			val = 255;
+			break;
 		}
-		else
-		{
-			rgba[3] = 255;
-		}
-		int val = rgba[zz];
+
 		return val;
 	}
 
