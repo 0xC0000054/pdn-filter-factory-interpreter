@@ -24,6 +24,14 @@
 #include <new>
 #include "ffeval.h"
 
+struct ColorBgra
+{
+	unsigned char b;
+	unsigned char g;
+	unsigned char r;
+	unsigned char a;
+};
+
 _envir *env;
 s_uf_tree *tree[4];
 unsigned char *Pixeldata = NULL;
@@ -63,21 +71,21 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 	{
 		int val;
 		// the source data is BGR(A) the destination is RGB(A)
-		unsigned char *p = Pixeldata + (yy * Stride) + (xx * PixelSize); // get the pixel at xx,yy
+		ColorBgra* p = reinterpret_cast<ColorBgra*>(Pixeldata + (yy * Stride) + (xx * PixelSize)); // get the pixel at xx,yy
 
 		switch (zz)
 		{
 		case 0:
-			val = p[2]; // Red
+			val = p->r; // Red
 			break;
 		case 1:
-			val = p[1]; // Green
+			val = p->g; // Green
 			break;
 		case 2:
-			val = p[0]; // Blue
+			val = p->b; // Blue
 			break;
 		case 3:
-			val = p[3]; // Alpha
+			val = p->a; // Alpha
 			break;
 		default:
 			val = 255;
