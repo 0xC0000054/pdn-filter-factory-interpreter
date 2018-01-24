@@ -183,18 +183,18 @@ void __stdcall FreeEnvironmentData(FilterEnvironmentData* data)
 }
 
 // Validates the syntax of the specified source code
-int __stdcall ValidateSrc(char* src)
+bool __stdcall ValidateSrc(char* src)
 {
-	int ret = 1;
+	bool valid = true;
 
 	s_uf_tree *vt = ::get_uf_tree(src);
 	if (vt == nullptr)
 	{
-		ret = 0;
+		valid = false;
 	}
 	free_tree(vt);
 
-	return ret;
+	return valid;
 }
 
 // Renders the filter to the output surface.

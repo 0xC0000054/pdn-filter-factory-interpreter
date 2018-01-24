@@ -62,7 +62,7 @@ extern "C" {
 
 	DLL_EXPORT void __stdcall FreeEnvironmentData(FilterEnvironmentData* data);
 
-	DLL_EXPORT int __stdcall ValidateSrc(char* src);
+	DLL_EXPORT bool __stdcall ValidateSrc(char* src);
 
 	DLL_EXPORT void __stdcall Render(const FilterEnvironmentData* globalEnvironment, const GdipRectangle* rois, const int roisLength, BitmapData* output);
 
