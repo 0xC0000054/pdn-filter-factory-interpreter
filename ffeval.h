@@ -31,23 +31,40 @@ extern "C" {
 
 #define DLL_EXPORT __declspec(dllexport)
 
+	struct FilterEnvironmentData
+	{
+		_envir env;
+		s_uf_tree* tree[4];
+	};
 
+	struct BitmapData
+	{
+		int width;
+		int height;
+		int stride;
+		int pixelSize;
+		void* scan0;
+	};
+
+	struct GdipRectangle
+	{
+		int x;
+		int y;
+		int width;
+		int height;
+	};
 
 	DLL_EXPORT int __stdcall SetupBitmap(unsigned char* pixelData, int width, int height, int stride, int pixelSize);
 
-	DLL_EXPORT void __stdcall SetControls(int val, int ctl);
+	DLL_EXPORT void __stdcall DestroyBitmap();
 
-	DLL_EXPORT void __stdcall UpdateEnvir(int x, int y);
+	DLL_EXPORT FilterEnvironmentData* __stdcall CreateEnvironmentData(const int width, const int height, const int pixelSize, char* source[], int controlValues[]);
+
+	DLL_EXPORT void __stdcall FreeEnvironmentData(FilterEnvironmentData* data);
 
 	DLL_EXPORT int __stdcall ValidateSrc(char* src);
 
-	DLL_EXPORT void __stdcall SetupTree(char* src, int c);
-
-	DLL_EXPORT int __stdcall CalcColor(int c);
-
-	DLL_EXPORT void __stdcall FreeData();
-
-	DLL_EXPORT bool __stdcall datafreed();
+	DLL_EXPORT void __stdcall Render(const FilterEnvironmentData* globalEnvironment, const GdipRectangle* rois, const int roisLength, BitmapData* output);
 
 #ifdef __cplusplus
 }
