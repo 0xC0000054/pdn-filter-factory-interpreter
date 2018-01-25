@@ -24,6 +24,9 @@
 #include <new>
 #include "ffeval.h"
 
+// Disable C4345: behavior change: an object of POD type constructed with an initializer of the form () will be default-initialized.
+#pragma warning(disable: 4345)
+
 struct ColorBgra
 {
 	unsigned char b;
