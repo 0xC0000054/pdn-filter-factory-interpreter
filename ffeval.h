@@ -54,11 +54,7 @@ extern "C" {
 		int height;
 	};
 
-	DLL_EXPORT int __stdcall SetupBitmap(unsigned char* pixelData, int width, int height, int stride, int pixelSize);
-
-	DLL_EXPORT void __stdcall DestroyBitmap();
-
-	DLL_EXPORT FilterEnvironmentData* __stdcall CreateEnvironmentData(const int width, const int height, const int pixelSize, char* source[], int controlValues[]);
+	DLL_EXPORT FilterEnvironmentData* __stdcall CreateEnvironmentData(const BitmapData* inputImage, char* source[], int controlValues[]);
 
 	DLL_EXPORT void __stdcall FreeEnvironmentData(FilterEnvironmentData* data);
 

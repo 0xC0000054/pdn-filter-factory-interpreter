@@ -1,5 +1,6 @@
 /*
  * Written 1997,2003 Jens Ch. Restemeier <jrestemeier@currantbun.com>
+ * Portions Copyright 2018 Nicholas Hayes
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,6 +44,7 @@ typedef struct _envir {
 	int m;			/* distance to center of the pic */
 	int M;			/* maximum distance from the center */
 	src_func *src;		/* function to get pixel-information */
+	void *user_data; /* data that can be used in the callbacks */
 } _envir;
 
 #ifdef __cplusplus

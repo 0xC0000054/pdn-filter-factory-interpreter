@@ -35,15 +35,23 @@ struct ColorBgra
 	unsigned char a;
 };
 
-unsigned char *Pixeldata = NULL;
-int Stride = 0; // the stride of the Pixeldata
-int PixelSize = 0; // the bits per pixel of the Pixeldata
+struct SourceImageData
+{
+	unsigned char* scan0;
+	int stride;
+	int bytesPerPixel;
+
+	SourceImageData(const BitmapData* image) : scan0(reinterpret_cast<unsigned char*>(image->scan0)),
+		stride(image->stride), bytesPerPixel(image->pixelSize)
+	{
+	}
+};
 
 // The function to get the pixel data from the bitmap
 static int GetPixel(_envir* e, int xx, int yy, int zz)
 {
 
-	if (e == nullptr) return 255;
+	if (e == nullptr || e->user_data == nullptr) return 255;
 
 	const int width = e->X;
 	const int height = e->Y;
@@ -67,11 +75,12 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 		yy = 0;
 	}
 
-	if (zz < e->Z && Pixeldata != nullptr)
+	if (zz < e->Z)
 	{
 		int val;
 		// the source data is BGR(A) the destination is RGB(A)
-		ColorBgra* p = reinterpret_cast<ColorBgra*>(Pixeldata + (yy * Stride) + (xx * PixelSize)); // get the pixel at xx,yy
+		const SourceImageData* source = reinterpret_cast<const SourceImageData*>(e->user_data);
+		ColorBgra* p = reinterpret_cast<ColorBgra*>(source->scan0 + (yy * source->stride) + (xx * source->bytesPerPixel)); // get the pixel at xx,yy
 
 		switch (zz)
 		{
@@ -98,65 +107,34 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 	return 255; // return 255 if there is an error
 }
 
-
-/*  Setup the source bitmap information
-*   this must be called first
-*   pixelData is the pointer to the start of the pixel data, Scan0.
-*   pixelSize is the number of color channels in the image either 3 or 4 if the image has an alpha channel.
-*/
-int __stdcall SetupBitmap(unsigned char *pixelData, int width, int height, int stride, int pixelSize)
-{
-	if (pixelData == nullptr) // return negative value if there is an error
-	{
-		return -1; // pixeldata is null
-	}
-
-	if (width <= 0 || height <= 0)
-	{
-	   return -2; // invalid width or height
-	}
-
-	if (pixelSize < 3 || pixelSize > 4)
-	{
-		return -3; // the number of channels must be either 3 (RGB) or 4 (RGBA)
-	}
-
-	Pixeldata = pixelData;
-	Stride = stride;
-	PixelSize = pixelSize;
-
-	return 1;
-}
-
-// Destroy the source bitmap information.
-void __stdcall DestroyBitmap()
-{
-	// Pixeldata is a pointer to the start of the pixel data in an image owned by the caller.
-	// The caller will handle cleaning up its own memory, so just set the pointer to nullptr.
-	Pixeldata = nullptr;
-	Stride = 0;
-	PixelSize = 0;
-}
-
 // Creates the filter environment data.
-// width is the width of the image in pixels.
-// height is the height of the image in pixels.
-// pixelSize is the number of channels in the image, 3 for RGB images or 4 if the image has transparency.
+// inputImage is the source image data.
 // source is the filter source code for the 4 channels
 // controlValues is the 8 slider values that can be used by a filter.
-FilterEnvironmentData* __stdcall CreateEnvironmentData(const int width, const int height, const int pixelSize, char* source[], int controlValues[])
+FilterEnvironmentData* __stdcall CreateEnvironmentData(const BitmapData* inputImage, char* source[], int controlValues[])
 {
 	FilterEnvironmentData* filterData = new(std::nothrow) FilterEnvironmentData();
 	if (filterData == nullptr)
 	{
 		return nullptr;
 	}
+	SourceImageData* userData = new(std::nothrow) SourceImageData(inputImage);
+	if (userData == nullptr)
+	{
+		delete filterData;
+
+		return nullptr;
+	}
+
+	const int width = inputImage->width;
+	const int height = inputImage->height;
 
 	filterData->env.X = width;
 	filterData->env.Y = height;
-	filterData->env.Z = pixelSize; // the max number of channels
+	filterData->env.Z = inputImage->pixelSize; // the max number of channels
 	filterData->env.M = static_cast<int>(sqrt(static_cast<double>(width * width) + static_cast<double>(height * height)) / 2.0); // the center of the image
 	filterData->env.src = GetPixel;
+	filterData->env.user_data = userData;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -179,6 +157,11 @@ void __stdcall FreeEnvironmentData(FilterEnvironmentData* data)
 		for (int i = 0; i < 4; i++)
 		{
 			free_tree(data->tree[i]);
+		}
+
+		if (data->env.user_data != nullptr)
+		{
+			delete data->env.user_data;
 		}
 
 		delete data;
