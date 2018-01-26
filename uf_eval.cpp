@@ -1,5 +1,6 @@
 /*
  * Written 1997,2003 Jens Ch. Restemeier <jrestemeier@currantbun.com>
+ * Portions Copyright 2011 Nicholas Hayes
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
