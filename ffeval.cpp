@@ -80,7 +80,7 @@ static int GetPixel(_envir* e, int xx, int yy, int zz)
 		int val;
 		// the source data is BGR(A) the destination is RGB(A)
 		const SourceImageData* source = reinterpret_cast<const SourceImageData*>(e->user_data);
-		ColorBgra* p = reinterpret_cast<ColorBgra*>(source->scan0 + (yy * source->stride) + (xx * source->bytesPerPixel)); // get the pixel at xx,yy
+		const ColorBgra* p = reinterpret_cast<const ColorBgra*>(source->scan0 + (yy * source->stride) + (xx * source->bytesPerPixel)); // get the pixel at xx,yy
 
 		switch (zz)
 		{
