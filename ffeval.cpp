@@ -205,7 +205,7 @@ void __stdcall Render(const FilterEnvironmentData* globalEnvironment, const Gdip
 
 		for (int y = top; y < bottom; y++)
 		{
-			ColorBgra* ptr = reinterpret_cast<ColorBgra*>(scan0 + (y * output->stride));
+			ColorBgra* ptr = reinterpret_cast<ColorBgra*>(scan0 + (y * output->stride) + (left * output->pixelSize));
 			env.y = y;
 
 			for (int x = left; x < right; x++)
