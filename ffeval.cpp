@@ -38,7 +38,7 @@ struct ColorBgra
 
 struct SourceImageData
 {
-	unsigned char* scan0;
+	const unsigned char* scan0;
 	int stride;
 	int bytesPerPixel;
 
